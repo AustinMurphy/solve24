@@ -33,17 +33,17 @@ def parse_rpn(expression):
 
     for val in expression.split(' '):
         if val in ['-', '+', '*', '/']:
-            # don't operate on fewer than 2 numbers
-            if len(stack) < 2:
-                return 0
+            ## don't operate on fewer than 2 numbers
+            #if len(stack) < 2:
+            #    return 0
             op1 = stack.pop()
             op2 = stack.pop()
             if val=='-': result = op2 - op1
             if val=='+': result = op2 + op1
             if val=='*': result = op2 * op1
-            # don't divide by zero
-            if op1 == 0:
-                return 0
+            ## don't divide by zero
+            #if op1 == 0:
+            #    return 0
             if val=='/': result = op2 / op1
             stack.append(result)
         else:
@@ -110,13 +110,15 @@ if __name__ == '__main__':
     if len(sys.argv) != 5:
         usage()
 
-    nums = sys.argv[1:5]
-    nums.sort()
+    numslist = sys.argv[1:5]
+    numslist.sort()
+    nums = tuple(numslist)
 
-    opers = [ '+', '-', '*', '/' ]
+    operslist = [ '+', '-', '*', '/' ]
 
 
     tries = 0
+    computable = 0
     solves = 0
     divbyzero = 0
     popnothing = 0
@@ -124,21 +126,22 @@ if __name__ == '__main__':
     # there are lots of duplicate permutations
     # Set enforces uniqueness 
     #   the combination function does not work as expected
-    numset = Set()
+    operset = Set()
     numoperset = Set()
     solveset = Set()
 
-    for l in itertools.permutations(nums, 4):
-        numset.add(l)
+    for j in itertools.product(operslist, repeat=3):
+        #print "j:", j
+        lj = list(j)
+        lj.sort()
+        j = tuple(lj)
+        operset.add(j)
 
-    #print "num permutation set size:", len(numset)
-
-    for i in numset:
-        for j in itertools.product(opers, repeat=3):
-            for k in itertools.permutations(i+j, 7):
-                numoperset.add(k)
-
-    #print "num-oper permutation set size:", len(numoperset)
+    for ops in operset:
+        #print "ops:", ops
+        for k in itertools.permutations(nums+ops, 7):
+            #print "k:", k
+            numoperset.add(k)
 
     for m in numoperset:
         rpn = ' '.join(m)
@@ -149,12 +152,15 @@ if __name__ == '__main__':
         except ZeroDivisionError:
             divbyzero += 1
             #print "rpn:", rpn, " = UNDEF (div by zero)"
-            pass
+            continue
         except IndexError:
             popnothing += 1
             # can't pop 2 vars off stack if stack has fewer than 2 vars
             #print "IndexError:", rpn
-            pass
+            continue
+
+        computable += 1
+        #print "computable:", rpn, " = ", result
 
         if result == 24:
             solves += 1
@@ -165,10 +171,11 @@ if __name__ == '__main__':
     for s in sorted(solveset):
         print s
 
-    #print "solutions:", solves
     print "unique solutions:", len(solveset)
-    print "tries:", tries
-    #print "div by zero error:", divbyzero
-    #print "operator with no operand situations:", popnothing
+    #print "solutions:", solves
+    #print "computable equations:", computable
+    #print "tries:", tries
+    ##print "div by zero error:", divbyzero
+    ##print "operator with no operand situations:", popnothing
 
     
