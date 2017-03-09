@@ -1,0 +1,23 @@
+README
+
+Solve24  takes 4 positive integers,
+and attempts to create an equation that equals 24, 
+using all 4 numbers plus any combination of the 4 operators +, -, *, /.
+
+
+Example:
+
+$ ./solve24.py 7 5 3 3 
+(((5*3)-7)*3) = 24.0
+
+
+For the purpose of finding only unique solutions, 
+solve24 considers:
+  (a+b) == (b+a) 
+  (a*b) == (b*a)
+and reports only the unique version where a>=b.
+
+
+
+
+
