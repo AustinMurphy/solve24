@@ -169,10 +169,6 @@ if __name__ == '__main__':
 
 
 
-    print ""
-    print ""
-    print ""
-
     tries = 0
     divbyzero = 0
     popnothing = 0
@@ -229,6 +225,8 @@ if __name__ == '__main__':
     # Show the results
     #
 
+    print ""
+
 
     #print "tries:", tries
     #print "div by zero error:", divbyzero
@@ -236,7 +234,6 @@ if __name__ == '__main__':
     #print "computable equations:", computable
     #print "solutions:", solves
     print "unique solutions:", len(solvelist)
-    print ""
     print ""
     for s in sorted(solvelist, key=revstr):
         print s
