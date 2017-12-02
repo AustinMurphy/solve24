@@ -11,7 +11,7 @@
 
 # strategy:
 #   take 4 numbers from input
-#    generate all unique & computable permutations of 
+#    generate all unique & computable permutations of
 #    4 numbers and 3 operators
 #
 #  if we result in 24, print out the permutation
@@ -21,10 +21,10 @@
 
 
 import sys
-import itertools
 
 
 def usage():
+    """ Show correct usage """
     print ""
     print " Solve 24.  You must provide 4 positive integers as arguments."
     print " ex.  " + sys.argv[0] + " 3 3 4 4  "
@@ -33,11 +33,9 @@ def usage():
 
 
 
-
-# from: http://danishmujeeb.com/blog/2014/12/parsing-reverse-polish-notation-in-python/
-#  slightly modified
 def parse_rpn(expression):
     """ Evaluate a reverse polish notation """
+    # from: http://danishmujeeb.com/blog/2014/12/parsing-reverse-polish-notation-in-python/
 
     stack = []
 
@@ -54,6 +52,7 @@ def parse_rpn(expression):
             stack.append(float(val))
 
     return stack.pop()
+
 
 
 def rpn_to_infix(expression):
@@ -100,8 +99,9 @@ def rpn_to_infix(expression):
     return str(outstack.pop() + " = " + str(stack.pop()))
 
 
+
 def gen_rpn( rpn, nums, numcount, opercount ):
-    """ recursive function to generate a list of rpn expressions for a given list of numbers"""
+    """ Generate a list of rpn expressions for a given list of numbers"""
 
     # rpn is a list of numbers and operators intended to be computable
     #  since each operator replaces two numbers with one, there must be one more number than operator
@@ -113,20 +113,16 @@ def gen_rpn( rpn, nums, numcount, opercount ):
         # this lets us use this function as an iterator
         yield rpn
 
-
     # rpn is not long enough yet
     # extend it
-
-    localrpn = list(rpn)
 
     # add an operator, if possible
     if numcount - opercount >= 2:
         for op in ['+', '-', '*', '/']:
-            newrpn = list(localrpn)
+            newrpn = list(rpn)
             newrpn.append(op)
             for r in gen_rpn(newrpn, nums, numcount, opercount+1):
                 yield r
-
 
     # add a number, if possible
     #   we only want to iterate over unique nums at this round
@@ -136,18 +132,15 @@ def gen_rpn( rpn, nums, numcount, opercount ):
             unums.append(n)
 
     for n in unums:
-        localnums = list(nums)
-        localnums.remove(n)
-        newrpn = list(localrpn)
+        newnums = list(nums)
+        newnums.remove(n)
+        newrpn = list(rpn)
         newrpn.append(n)
-        for r in  gen_rpn(newrpn, localnums, numcount+1, opercount):
+        for r in  gen_rpn(newrpn, newnums, numcount+1, opercount):
             yield r
 
 
-    #return
-
         
-
 def revstr(str):
     """ helper function for sorting equations"""
     #  try to push the more complicated parts to the left
@@ -156,7 +149,9 @@ def revstr(str):
 
 
 
-
+# 
+# Main
+#
 
 
 if __name__ == '__main__':
@@ -168,12 +163,14 @@ if __name__ == '__main__':
     numslist.sort()
 
 
-
+    # debug helpers
     tries = 0
     divbyzero = 0
     popnothing = 0
     computable = 0
     solves = 0
+
+    # list of unique solutions
     solvelist = []
 
     #
@@ -226,8 +223,6 @@ if __name__ == '__main__':
     #
 
     print ""
-
-
     #print "tries:", tries
     #print "div by zero error:", divbyzero
     #print "operator with no operand situations:", popnothing
